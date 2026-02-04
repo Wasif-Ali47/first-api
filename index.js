@@ -51,7 +51,7 @@ app.route("/api/users/:id")
             });
     })
 
-    // edit user by id
+    // edit user by id ==
     .patch((req, res) => {
         const id = Number(req.params.id);
         const body = req.body;

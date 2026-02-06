@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 // mongo db connection
 
-mongoose.connect("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/First_API?appName=WasifCluster")
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Mongo connected "))
     .catch(err => console.log("Mongo connection failed ", err))
 

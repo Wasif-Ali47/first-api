@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 
 // mongo db connection
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/First_API?appName=WasifCluster")
+// mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Mongo connected "))
     .catch(err => console.log("Mongo connection failed ", err))
 
@@ -37,140 +38,66 @@ app.use((req, res, next) => {
     next();
 })
 
-// // get users
-// app.get("/api/users", async (req, res) => {
-//     var users = await User.find({});
-//     return res.json(users)
-// })
-
-// // add new user
-// app.post("/api/users", async (req, res) => {
-//     const body = req.body;
-//     if (!body) {
-//         return res.status(400).json({ message: "please fill all fields" })
-//     } else if (!body.name) {
-//         return res.status(400).json({ message: "Name is missing" })
-//     } else if (!body.email) {
-//         return res.status(400).json({ message: "Email is missing" })
-//     } else if (!body.profession) {
-//         return res.status(400).json({ message: "Profession is missing" })
-//     } else {
-//         const result = await User.create({
-//             name: body.name,
-//             email: body.email,
-//             profession: body.profession,
-//         });
-
-//         console.log("result:", result)
-//         return res.status(201).json({
-//             message: "user created"
-//         })
-//     }
-
-// });
-
-
-// app.route("/api/users/:id")
-
-//     // get user by id
-//     .get(async (req, res) => {
-//         const user = await User.findById(req.params.id);
-//         return res.json(user)
-//     })
-
-//     // update user by id
-//     .put(async (req, res) => {
-//         const user = await User.findByIdAndUpdate(
-//             req.params.id,
-//             req.body,
-//             { new: true, overwrite: true, runValidators: true }
-//         );
-
-//         if (!user) return res.status(404).json({ message: "user not found" });
-//         res.json({ message: "user updated"});
-//     })
-
-//     // delete user by id
-//     .delete(async (req, res) => {
-//         const user = await User.findByIdAndDelete(req.params.id);
-//         if (!user) return res.status(404).json({ message: "user not found" });
-//         res.json({ message: "user deleted" });
-//     });
-
-
-
-
-
-
-
-
-
-
 // get users
 app.get("/api/users", async (req, res) => {
-  try {
-    const users = await User.find({});
-    return res.json(users);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+    var users = await User.find({});
+    return res.json(users)
+})
 
 // add new user
 app.post("/api/users", async (req, res) => {
-  try {
-    const { name, email, profession } = req.body;
-    if (!name || !email || !profession)
-      return res.status(400).json({ message: "All fields are required" });
+    const body = req.body;
+    if (!body) {
+        return res.status(400).json({ message: "please fill all fields" })
+    } else if (!body.name) {
+        return res.status(400).json({ message: "Name is missing" })
+    } else if (!body.email) {
+        return res.status(400).json({ message: "Email is missing" })
+    } else if (!body.profession) {
+        return res.status(400).json({ message: "Profession is missing" })
+    } else {
+        const result = await User.create({
+            name: body.name,
+            email: body.email,
+            profession: body.profession,
+        });
 
-    const user = await User.create({ name, email, profession });
-    return res.status(201).json({ message: "user created", user });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+        console.log("result:", result)
+        return res.status(201).json({
+            message: "user created"
+        })
+    }
+
 });
 
-// get by id
-app.get("/api/users/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: "user not found" });
-    return res.json(user);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
 
-// put/update
-app.put("/api/users/:id", async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, overwrite: true, runValidators: true }
-    );
-    if (!user) return res.status(404).json({ message: "user not found" });
-    return res.json({ message: "user updated", user });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+app.route("/api/users/:id")
 
-// delete
-app.delete("/api/users/:id", async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) return res.status(404).json({ message: "user not found" });
-    return res.json({ message: "user deleted" });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+    // get user by id
+    .get(async (req, res) => {
+        const user = await User.findById(req.params.id);
+        return res.json(user)
+    })
+
+    // update user by id
+    .put(async (req, res) => {
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, overwrite: true, runValidators: true }
+        );
+
+        if (!user) return res.status(404).json({ message: "user not found" });
+        res.json({ message: "user updated"});
+    })
+
+    // delete user by id
+    .delete(async (req, res) => {
+        const user = await User.findByIdAndDelete(req.params.id);
+        if (!user) return res.status(404).json({ message: "user not found" });
+        res.json({ message: "user deleted" });
+    });
+
 
 
 

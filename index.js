@@ -97,32 +97,3 @@ app.route("/api/users/:id")
         if (!user) return res.status(404).json({ message: "user not found" });
         res.json({ message: "user deleted" });
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-// run the server on loacalhost
-// app.listen(8000, () => console.log("server started"))
-module.exports = app;
-
-
-
-
-
-
-
-
-
-
-
-
-

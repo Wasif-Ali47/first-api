@@ -40,9 +40,14 @@ app.use((req, res, next) => {
 
 // get users
 app.get("/api/users", async (req, res) => {
-    var users = await User.find({});
-    return res.json(users)
-})
+    try {
+        const users = await User.find({});
+        return res.json(users);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Failed to fetch users" });
+    }
+});
 
 // add new user
 app.post("/api/users", async (req, res) => {
@@ -97,3 +102,6 @@ app.route("/api/users/:id")
         if (!user) return res.status(404).json({ message: "user not found" });
         res.json({ message: "user deleted" });
     });
+
+
+    module.exports = app;

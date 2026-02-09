@@ -2,11 +2,20 @@ const express = require('express')
 const mongoose = require('mongoose')
 
 // mongo db connection
+let isConnected = false;
 
-mongoose.connect("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/First_API?appName=WasifCluster")
-// mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("Mongo connected "))
-    .catch(err => console.log("Mongo connection failed ", err))
+async function connectDB() {
+  if (isConnected) return;
+  await mongoose.connect(process.env.MONGO_URI);
+  isConnected = true;
+  console.log("Mongo connected");
+}
+
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
 
 const app = express();
 

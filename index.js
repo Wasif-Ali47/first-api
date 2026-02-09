@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 // mongo db connection
-MongoDBConnectt("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/First_API?appName=WasifCluster");
+MongoDBConnect("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/First_API?appName=WasifCluster");
 
 // response for home screen ===============
 app.get("/", async (req, res) => {

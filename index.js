@@ -1,9 +1,11 @@
 const express = require('express')
 const User = require('./model/usersModel')
+const cors = require('cors')
 const MongoDBConnect = require('./connection/connection');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // mongo db connection
 MongoDBConnect("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/users_management?appName=WasifCluster");

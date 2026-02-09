@@ -1,26 +1,29 @@
 const express = require('express')
 const mongoose = require('mongoose')
 
+const app = express();
+// middleware
+app.use(express.json());
+
 // mongo db connection
 let isConnected = false;
 
 async function connectDB() {
-  if (isConnected) return;
-  await mongoose.connect(process.env.MONGO_URI);
-  isConnected = true;
-  console.log("Mongo connected");
+    if (isConnected) return;
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        isConnected = true;
+        console.log("Connected to mongoDB")
+    } catch (err) {
+        console.log("error connectring to mongoDB", err)
+    }
 }
 
 app.use(async (req, res, next) => {
-  await connectDB();
-  next();
+    await connectDB();
+    next();
 });
 
-
-const app = express();
-
-// middleware
-app.use(express.json());
 
 // schema
 const userSchema = new mongoose.Schema({
@@ -102,7 +105,7 @@ app.route("/api/users/:id")
         );
 
         if (!user) return res.status(404).json({ message: "user not found" });
-        res.json({ message: "user updated"});
+        res.json({ message: "user updated" });
     })
 
     // delete user by id
@@ -112,5 +115,6 @@ app.route("/api/users/:id")
         res.json({ message: "user deleted" });
     });
 
+  
 
-    module.exports = app;
+module.exports = app;

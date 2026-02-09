@@ -1,58 +1,19 @@
 const express = require('express')
-const mongoose = require('mongoose')
+const User = require('./model/usersModel')
+const MongoDBConnect = require('./connection/connection');
 
 const app = express();
-// middleware
 app.use(express.json());
 
-
-
 // mongo db connection
-let isConnected = false;
+MongoDBConnectt("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/First_API?appName=WasifCluster");
 
-async function connectDB() {
-    if (isConnected) return;
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        isConnected = true;
-        console.log("Connected to mongoDB")
-    } catch (err) {
-        console.log("error connectring to mongoDB", err)
-    }
-}
-
-app.use(async (req, res, next) => {
-    await connectDB();
-    next();
+// response for home screen ===============
+app.get("/", async (req, res) => {
+    return res.send("hello! You're at a home route");
 });
 
-
-// schema
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    profession: {
-        type: String,
-        required: true
-    },
-}, { timestamps: true });
-
-const User = mongoose.model("user", userSchema);
-
-// custom middleware
-app.use((req, res, next) => {
-    console.log("Middleware here");
-    next();
-})
-
-// get users
+// get users =================
 app.get("/api/users", async (req, res) => {
     try {
         const users = await User.find({});
@@ -63,7 +24,7 @@ app.get("/api/users", async (req, res) => {
     }
 });
 
-// add new user
+// add new user =================
 app.post("/api/users", async (req, res) => {
     const body = req.body;
     if (!body) {
@@ -92,13 +53,13 @@ app.post("/api/users", async (req, res) => {
 
 app.route("/api/users/:id")
 
-    // get user by id
+    // get user by id =================
     .get(async (req, res) => {
         const user = await User.findById(req.params.id);
         return res.json(user)
     })
 
-    // update user by id
+    // update user by id =================
     .put(async (req, res) => {
         const user = await User.findByIdAndUpdate(
             req.params.id,
@@ -110,7 +71,7 @@ app.route("/api/users/:id")
         res.json({ message: "user updated" });
     })
 
-    // delete user by id
+    // delete user by id =================
     .delete(async (req, res) => {
         const user = await User.findByIdAndDelete(req.params.id);
         if (!user) return res.status(404).json({ message: "user not found" });

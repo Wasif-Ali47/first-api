@@ -6,17 +6,17 @@ const app = express();
 app.use(express.json());
 
 // mongo db connection
-MongoDBConnect("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/First_API?appName=WasifCluster");
-
+MongoDBConnect("mongodb+srv://Wasif_Ali:wasif_cluster0_password@wasifcluster.qd6bhlo.mongodb.net/users_management?appName=WasifCluster");
 // response for home screen ===============
 app.get("/", async (req, res) => {
-    return res.send("hello! You're at a home route");
+    return res.send("hello! You're at a home page");
 });
 
 // get users =================
 app.get("/api/users", async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find();
+        console.log("users:", users)
         return res.json(users);
     } catch (error) {
         console.error(error);

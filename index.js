@@ -21,5 +21,4 @@ app.use(logReqRes('logs/userLogs/logs.txt'));
 
 app.use("/api/users", userRouter);
 
-app.listen(8000, () => console.log("server started at 8000"))
 module.exports = app;

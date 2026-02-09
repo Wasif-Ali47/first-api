@@ -5,43 +5,46 @@ const app = express();
 // middleware
 app.use(express.json());
 
-// mongo db connection
-let cached = global.mongoose;
 
-if (!cached) cached = global.mongoose = { conn: null, promise: null };
+
+// mongo db connection
+let isConnected = false;
 
 async function connectDB() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  }
-
-  cached.conn = await cached.promise;
-  return cached.conn;
+    if (isConnected) return;
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        isConnected = true;
+        console.log("Connected to mongoDB")
+    } catch (err) {
+        console.log("error connectring to mongoDB", err)
+    }
 }
 
-// connect to mongodb
 app.use(async (req, res, next) => {
-  try {
     await connectDB();
     next();
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("DB connection failed");
-  }
 });
 
-// create schema
-const User = mongoose.models.user || mongoose.model("user", new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  profession: { type: String, required: true }
-}, { timestamps: true }));
 
+// schema
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    profession: {
+        type: String,
+        required: true
+    },
+}, { timestamps: true });
+
+const User = mongoose.model("user", userSchema);
 
 // custom middleware
 app.use((req, res, next) => {

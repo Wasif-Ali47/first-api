@@ -3,7 +3,6 @@ const userRouter = require('./routes/user')
 const userAuthRouter = require('./routes/userAuthRoutes')
 const cors = require('cors')
 const MongoDBConnect = require('./connection/connection');
-const { logReqRes } = require('./middlewares');
 
 const app = express();
 app.use(express.json());

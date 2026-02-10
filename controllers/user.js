@@ -1,4 +1,4 @@
-const { NETWORK_ERROR, NAME_REQUIRED, EMAIL_REQUIRED, PROFESSION_REQUIRED, ALL_FILEDS_REQUIRED, USER_NOT_FOUND, USER_UPDATED, USER_DELETED, PASSWORD_REQUIRED, USER_CREATED } = require("../messages/message");
+const { NETWORK_ERROR, NAME_REQUIRED, EMAIL_REQUIRED, PROFESSION_REQUIRED, ALL_FILEDS_REQUIRED, USER_NOT_FOUND, USER_UPDATED, USER_DELETED, PASSWORD_REQUIRED, CREATE_USER_FAILED, USER_CREATED } = require("../messages/message");
 const User = require("../models/usersModel");
 const bcrypt = require('bcrypt');
 
@@ -35,7 +35,7 @@ async function handlePostNewUser(req, res) {
         res.status(201).json({ success: USER_CREATED });
     } catch (err) {
         console.error("DB create error:", err);
-        res.status(500).json({ error: "Failed to create user" });
+        res.status(500).json({ error: CREATE_USER_FAILED });
     }
 }
 

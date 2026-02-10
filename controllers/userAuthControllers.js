@@ -12,18 +12,18 @@ async function handleUserSignUp(req, res) {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    await User.create({
+    const result = await User.create({
       name,
       email,
       profession: profession ?? undefined,
       password: hashed
     });
-
-    res.json({ success: SIGNED_UP });
-  }catch (err) {
-  res.status(500).json({ error: SIGN_UP_FAILED });
-}
-
+    console.log("result:", result)
+    res.status(201).json({ success: SIGNED_UP });
+  } catch (err) {
+    console.error("DB create error:", err);
+    res.status(500).json({ error: SIGN_UP_FAILED });
+  }
 };
 
 // LOGIN

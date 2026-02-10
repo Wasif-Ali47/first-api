@@ -1,5 +1,6 @@
 const { NETWORK_ERROR, NAME_REQUIRED, EMAIL_REQUIRED, PROFESSION_REQUIRED, ALL_FILEDS_REQUIRED, USER_NOT_FOUND, USER_UPDATED, USER_DELETED, PASSWORD_REQUIRED } = require("../messages/message");
 const User = require("../models/usersModel");
+const bcrypt = require('bcrypt');
 
 
 async function handleGetAllUsers(req, res) {
@@ -15,31 +16,26 @@ async function handleGetAllUsers(req, res) {
 
 async function handlePostNewUser(req, res) {
     const body = req.body;
-    if (!body) {
-        return res.status(400).json({ message: ALL_FILEDS_REQUIRED })
-    } else if (!body.name) {
-        return res.status(400).json({ message: NAME_REQUIRED })
-    } else if (!body.email) {
-        return res.status(400).json({ message: EMAIL_REQUIRED })
-    } else if (!body.profession) {
-        return res.status(400).json({ message: PROFESSION_REQUIRED })
-    } else if (!body.password) {
-        return res.status(400).json({ message: PASSWORD_REQUIRED })
-    } else {
-        try {
-            const result = await User.create({
-                name: body.name,
-                email: body.email,
-                profession: body.profession,
-                password: body.password
-            });
-            console.log("result:", result)
-            res.status(201).json({ success: USER_CREATED });
-        } catch (err) {
-            console.error("DB create error:", err);
-            res.status(500).json({ error: NETWORK_ERROR });
-        }
+    if (!body) return res.status(400).json({ message: ALL_FILEDS_REQUIRED });
+    if (!body.name) return res.status(400).json({ message: NAME_REQUIRED });
+    if (!body.email) return res.status(400).json({ message: EMAIL_REQUIRED });
+    if (!body.profession) return res.status(400).json({ message: PROFESSION_REQUIRED });
+    if (!body.password) return res.status(400).json({ message: PASSWORD_REQUIRED });
 
+    try {
+        const hashed = await bcrypt.hash(body.password, 10);
+
+        const result = await User.create({
+            name: body.name,
+            email: body.email,
+            profession: body.profession,
+            password: hashed
+        });
+        console.log("result:", result);
+        res.status(201).json({ success: USER_CREATED });
+    } catch (err) {
+        console.error("DB create error:", err);
+        res.status(500).json({ error: "Failed to create user" });
     }
 }
 

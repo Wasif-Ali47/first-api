@@ -15,5 +15,11 @@ module.exports = {
   CREATE_USER_FAILED: "failed to create user",
   UPDATE_USER_FAILED: "failed to update user",
   DELETE_USER_FAILED: "failed to delete user",
-  NETWORK_ERROR: "network error, try again"
+  NETWORK_ERROR: "network error, try again",
+
+  SIGNED_UP: "signed up",
+  SIGN_UP_FAILED: "failed to sign up",
+  LOGGED_IN: "login Successful",
+  LOGIN_FAILED: "failed to login",
+  WRONG_PASSWORD: "wrong password"
 };

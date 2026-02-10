@@ -1,5 +1,6 @@
 const express = require('express')
 const userRouter = require('./routes/user')
+const userAuthRouter = require('./routes/userAuthRoutes')
 const cors = require('cors')
 const MongoDBConnect = require('./connection/connection');
 const { logReqRes } = require('./middlewares');
@@ -20,5 +21,7 @@ app.use(logReqRes('logs/userLogs/logs.txt'));
 
 
 app.use("/api/users", userRouter);
+app.use("/auth", userAuthRouter)
+
 
 module.exports = app;

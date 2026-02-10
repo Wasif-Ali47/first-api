@@ -17,9 +17,6 @@ app.get("/", async (req, res) => {
 });
 
 
-app.use(logReqRes('logs/userLogs/logs.txt'));
-
-
 app.use("/api/users", userRouter);
 app.use("/auth", userAuthRouter)
 

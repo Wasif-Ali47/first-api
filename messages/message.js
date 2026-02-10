@@ -9,6 +9,7 @@ module.exports = {
   EMAIL_REQUIRED: "email required",
   NAME_REQUIRED: "name required",
   PROFESSION_REQUIRED: "profession required",
+  PASSWORD_REQUIRED: "password required",
 
   FETCH_USERS_FAILED: "failed to fetch users",
   FETCH_USER_FAILED: "failed to fetch user",

@@ -1,4 +1,4 @@
-const { NETWORK_ERROR, NAME_REQUIRED, EMAIL_REQUIRED, PROFESSION_REQUIRED, ALL_FILEDS_REQUIRED, USER_NOT_FOUND, USER_UPDATED, USER_DELETED } = require("../messages/message");
+const { NETWORK_ERROR, NAME_REQUIRED, EMAIL_REQUIRED, PROFESSION_REQUIRED, ALL_FILEDS_REQUIRED, USER_NOT_FOUND, USER_UPDATED, USER_DELETED, PASSWORD_REQUIRED } = require("../messages/message");
 const User = require("../models/usersModel");
 
 
@@ -24,11 +24,14 @@ async function handlePostNewUser(req, res) {
             return res.status(400).json({ message: EMAIL_REQUIRED })
         } else if (!body.profession) {
             return res.status(400).json({ message: PROFESSION_REQUIRED })
+        } else if (!body.password) {
+            return res.status(400).json({ message: PASSWORD_REQUIRED })
         } else {
             const result = await User.create({
                 name: body.name,
                 email: body.email,
                 profession: body.profession,
+                password: body.password
             });
 
             console.log("result:", result)
@@ -64,13 +67,15 @@ async function handleUpdateUserById(req, res) {
     try {
         const body = req.body;
         if (!body) {
-            return res.status(400).json({ error: ALL_FILEDS_REQUIRED })
+            return res.status(400).json({ message: ALL_FILEDS_REQUIRED })
         } else if (!body.name) {
-            return res.status(400).json({ error: NAME_REQUIRED })
+            return res.status(400).json({ message: NAME_REQUIRED })
         } else if (!body.email) {
-            return res.status(400).json({ error: EMAIL_REQUIRED })
+            return res.status(400).json({ message: EMAIL_REQUIRED })
         } else if (!body.profession) {
-            return res.status(400).json({ error: PROFESSION_REQUIRED })
+            return res.status(400).json({ message: PROFESSION_REQUIRED })
+        } else if (!body.password) {
+            return res.status(400).json({ message: PASSWORD_REQUIRED })
         } else {
             const user = await User.findByIdAndUpdate(
             req.params.id,

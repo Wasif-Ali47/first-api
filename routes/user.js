@@ -7,19 +7,21 @@ const {
     handleDeleteUserById
 } = require("../controllers/user");
 const { checkUserExistsByEmail } = require('../middlewares');
+const upload = require('../uploads');
+
 
 const router = express.Router();
 
 router
     .route("/")
     .get(handleGetAllUsers)
-    .post(checkUserExistsByEmail, handlePostNewUser)
+    .post(upload.single("image"),checkUserExistsByEmail, handlePostNewUser)
 
 
 router
     .route("/:id")
     .get(handleGetUserById)
-    .put(handleUpdateUserById)
+    .put(upload.single("image"),handleUpdateUserById)
     .delete(handleDeleteUserById)
 
 

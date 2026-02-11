@@ -1,29 +1,31 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/usersModel");
-const { NETWORK_ERROR, USER_EXISTS, SIGNED_UP, SIGN_UP_FAILED, USER_NOT_FOUND, WRONG_PASSWORD, LOGGED_IN } = require("../messages/message");
+const { NETWORK_ERROR, SIGNED_UP, SIGN_UP_FAILED, USER_NOT_FOUND, WRONG_PASSWORD, LOGGED_IN, ALL_FILEDS_REQUIRED, NAME_REQUIRED, EMAIL_REQUIRED, PASSWORD_REQUIRED } = require("../messages/message");
 
 // SIGN UP
 async function handleUserSignUp(req, res) {
-  try {
-    const { name, email, profession, password } = req.body;
-
-    const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ error: USER_EXISTS });
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    const result = await User.create({
-      name,
-      email,
-      profession: profession ?? undefined,
-      password: hashed
-    });
-    console.log("result:", result)
-    res.status(201).json({ success: SIGNED_UP });
-  } catch (err) {
-    console.error("DB create error:", err);
-    res.status(500).json({ error: SIGN_UP_FAILED });
-  }
+ const body = req.body;
+     if (!body) return res.status(400).json({ message: ALL_FILEDS_REQUIRED });
+     if (!body.name) return res.status(400).json({ message: NAME_REQUIRED });
+     if (!body.email) return res.status(400).json({ message: EMAIL_REQUIRED });
+     if (!body.password) return res.status(400).json({ message: PASSWORD_REQUIRED });
+ 
+     try {
+         const hashed = await bcrypt.hash(body.password, 10);
+ 
+         const result = await User.create({
+             name: body.name,
+             email: body.email,
+             profession: body.profession ?? undefined,
+             password: hashed,
+             image: req.file ? `/uploads/${req.file.filename}` : null
+         });
+ 
+         res.status(201).json({ success: SIGNED_UP, result });
+     } catch (err) {
+         console.error("DB create error:", err);
+         res.status(500).json({ error: SIGN_UP_FAILED });
+     }
 };
 
 // LOGIN

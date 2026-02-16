@@ -9,7 +9,7 @@ const ensureBody = require('./middlewares/parseRequest');
 const app = express();
 app.use("/uploads", express.static("uploads"));
 app.use(cors({
-  origin: "http://192.168.100.61:3000",
+  origin: "https://wasif-first-api-crud.vercel.app",
   credentials: true
 }));
 app.use(cookieParser());
@@ -24,6 +24,9 @@ app.get("/", async (req, res) => {
 
 app.use("/api/users",userRouter);
 app.use("/auth", userAuthRouter)
+
+
+app.listen(8000, ()=> console.log("server started at port 8000"))
 
 
 module.exports = app

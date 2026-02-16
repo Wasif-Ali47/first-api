@@ -1,7 +1,8 @@
 const User = require("../models/usersModel");
-const { EMAIL_REQUIRED, USER_EXISTS } = require('../messages/message');
+const { EMAIL_REQUIRED, USER_EXISTS, NOT_LOGGEDIN, USER_NOT_FOUND } = require('../messages/message');
 const path = require("path");
 const fs = require("fs");
+const { getUser } = require("../services/userAuthService");
 
 async function checkUserExistsByEmail(req, res, next) {
     const { email } = req.body;
@@ -12,7 +13,6 @@ async function checkUserExistsByEmail(req, res, next) {
 
     const user = await User.findOne({ email: email.trim() });
     if (user) {
-        // Delete the uploaded file if it was saved
         if (req.file) {
             const filePath = path.join(__dirname, '..', 'uploads', req.file.filename);
             try {
@@ -30,6 +30,29 @@ async function checkUserExistsByEmail(req, res, next) {
     next();
 }
 
+async function verifyToken(req, res, next) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ error: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    let decoded;
+    try {
+        decoded = getUser(token);
+    } catch (err) {
+        console.error("JWT error:", err);
+        return res.status(401).json({ error: "Invalid or expired token" });
+    }
+
+    req.user = decoded;
+    next();
+}
+
+
 module.exports = {
-    checkUserExistsByEmail
+    checkUserExistsByEmail,
+    verifyToken
 };

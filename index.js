@@ -1,13 +1,18 @@
-const express = require('express')
-const userRouter = require('./routes/user')
-const userAuthRouter = require('./routes/userAuthRoutes')
-const cors = require('cors')
+const express = require('express');
+const userRouter = require('./routes/userRoutes');
+const userAuthRouter = require('./routes/userAuthRoutes');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const MongoDBConnect = require('./connection/connection');
 const ensureBody = require('./middlewares/parseRequest');
 
 const app = express();
 app.use("/uploads", express.static("uploads"));
-app.use(cors());
+app.use(cors({
+  origin: "http://192.168.100.61:3000",
+  credentials: true
+}));
+app.use(cookieParser());
 app.use(ensureBody);
 
 // mongo db connection
@@ -17,13 +22,8 @@ app.get("/", async (req, res) => {
     return res.send("hello! You're at a home page");
 });
 
-app.use("/api/users", userRouter);
+app.use("/api/users",userRouter);
 app.use("/auth", userAuthRouter)
-
-
-app.listen(8000, () => {
-    console.log("Server is running on port 8000");
-})
 
 
 module.exports = app

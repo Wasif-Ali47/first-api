@@ -22,5 +22,7 @@ module.exports = {
   SIGN_UP_FAILED: "failed to sign up",
   LOGGED_IN: "login Successful",
   LOGIN_FAILED: "failed to login",
-  WRONG_PASSWORD: "wrong password"
+  WRONG_PASSWORD: "wrong password",
+
+  NOT_LOGGEDIN: "login required"
 };

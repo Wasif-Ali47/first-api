@@ -6,13 +6,21 @@ const path = require('path');
 
 async function handleGetAllUsers(req, res) {
     try {
-        const users = await User.find();
-        return res.json(users);
+        const users = await User.find({ createdBy: req.user._id });
+        if(users == null) {
+            return res.json({
+                message: "you have not created any users"
+            })
+        } else {
+
+            return res.json(users);
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: NETWORK_ERROR });
     }
 }
+
 
 async function handlePostNewUser(req, res) {
     const body = req.body;
@@ -29,7 +37,8 @@ async function handlePostNewUser(req, res) {
             email: body.email,
             profession: body.profession ?? undefined,
             password: hashed,
-            image: req.file ? `/uploads/${req.file.filename}` : null
+            image: req.file ? `/uploads/${req.file.filename}` : null,
+            createdBy: req.user?._id
         });
 
         res.status(201).json({ success: USER_CREATED, result });

@@ -1,4 +1,8 @@
 const bcrypt = require("bcrypt");
+const {
+    setUser,
+    getUser
+} = require('../services/userAuthService');
 const User = require("../models/usersModel");
 const { NETWORK_ERROR, SIGNED_UP, SIGN_UP_FAILED, USER_NOT_FOUND, WRONG_PASSWORD, LOGGED_IN, ALL_FILEDS_REQUIRED, NAME_REQUIRED, EMAIL_REQUIRED, PASSWORD_REQUIRED } = require("../messages/message");
 
@@ -38,8 +42,9 @@ async function handleUserLogin(req, res) {
 
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(400).json({ error: WRONG_PASSWORD });
+    const token = setUser(user)
 
-    res.json({ success: LOGGED_IN, userId: user._id, username: user.name, useremail: user.email });
+    res.json({ success: LOGGED_IN, userId: user._id,token: token, username: user.name, useremail: user.email });
   } catch (err) {
     res.status(500).json({ error: NETWORK_ERROR });
   }

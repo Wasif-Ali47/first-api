@@ -9,7 +9,7 @@ const ensureBody = require('./middlewares/parseRequest');
 const app = express();
 app.use("/uploads", express.static("uploads"));
 app.use(cors({
-  origin: "https://wasif-first-api-crud.vercel.app",
+  origin: "https://wasiffrontendtest.oxmite.com",
   credentials: true
 }));
 app.use(cookieParser());
